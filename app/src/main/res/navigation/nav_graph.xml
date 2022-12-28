@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/MainFrament">
+
+    <fragment
+        android:id="@+id/MainFrament"
+        android:name="com.taichung.bryant.kotlin_mvvm.ui.fragment.MainFragment"
+        android:label="MainFrament"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainfragment_to_attractionsdetailsfragment"
+            app:destination="@id/AttractionsDetailsFragment"
+            app:popUpTo="@id/MainFrament"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AttractionsDetailsFragment"
+        android:name="com.taichung.bryant.kotlin_mvvm.ui.fragment.AttractionsDetailsFragment"
+        android:label="AttractionsDetailsFragment"
+        tools:layout="@layout/fragmemt_attractions_details"/>
+
+    <fragment
+        android:id="@+id/AttractionsDetailWebviewFragment"
+        android:name="com.taichung.bryant.kotlin_mvvm.ui.fragment.AttractionsDetailWebviewFragment"
+        android:label="AttractionsDetailWebviewFragment"
+        tools:layout="@layout/fragment_attractions_detail_webview"/>
+
+</navigation>

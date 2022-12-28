@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.edit
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,9 @@ import com.taichung.bryant.kotlin_mvvm.databinding.FragmentMainBinding
 import com.taichung.bryant.kotlin_mvvm.listeners.ItemClickListener
 import com.taichung.bryant.kotlin_mvvm.ui.base.BaseFragment
 import com.taichung.bryant.kotlin_mvvm.ui.viewmodel.MainViewModel
+import com.taichung.bryant.kotlin_mvvm.utils.PreferenceHelper
+import com.taichung.bryant.kotlin_mvvm.utils.PreferenceHelper.get
+import com.taichung.bryant.kotlin_mvvm.utils.PreferenceHelper.set
 import com.taichung.bryant.kotlin_mvvm.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,11 +37,10 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
     private lateinit var mLayoutManager: LinearLayoutManager
     private var attractionsAdapter: AttractionsAdapter? = null
     private var lastVisibleItem: Int = 0
-    private var lang: String = ""
     private lateinit var sharedPreferences: SharedPreferences
     private var langDialog: AlertDialog.Builder? = null
     private var dialog: AlertDialog? = null
-    private var langList: List<String> = listOf(
+    private val langList = listOf(
         "正體中文",
         "簡體中文",
         "英文",
@@ -47,6 +50,16 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
         "印尼文",
         "泰文"
     )
+    private val langListMap = listOf(
+        "zh-tw",
+        "zh-cn",
+        "en",
+        "ja",
+        "ko",
+        "es",
+        "id",
+        "th"
+    )
 
     companion object {
         fun newInstance() = MainFragment()
@@ -54,7 +67,12 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.toolbar.inflateMenu(R.menu.menu)
+        initToolBar(
+            binding.toolbar,
+            getString(R.string.app_name),
+            bBack = false,
+            action = true
+        ) { showLangDialog() }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,15 +80,13 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
         initView()
         initObserver()
 
-        sharedPreferences = requireContext().getSharedPreferences(DATA, 0)
-        lang = sharedPreferences.getString(LANG, "zh-tw").toString()
-
         binding.llProgressBar.visibility = View.GONE
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.getAttractionsAll(lang, viewModel.page.value ?: 1)
+        sharedPreferences = PreferenceHelper.customPrefs(requireContext(), DATA)
+        viewModel.getAttractionsAll(sharedPreferences[LANG], viewModel.page.value ?: 1)
     }
 
     private fun initView() {
@@ -98,7 +114,7 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
                     if (isScrollToBottom) {
                         if (isLoadMore) {
                             viewModel.getNextPage()
-                            viewModel.getAttractionsAll(lang, viewModel.page.value ?: -1)
+                            viewModel.getAttractionsAll(sharedPreferences[LANG], viewModel.page.value ?: -1)
                         } else {
                             showToast(requireContext(), getString(R.string.no_more_info))
                         }
@@ -111,19 +127,6 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
                 }
             })
         }
-
-        binding.toolbar.title = getString(R.string.app_name)
-        binding.toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.menu_lang -> {
-                    showLangDialog()
-                    true
-                }
-                else -> {
-                    true
-                }
-            }
-        }
     }
 
     private fun initObserver() {
@@ -131,7 +134,8 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
             if (viewModel.page.value != 1) {
                 attractionsAdapter?.updateList(it)
                 binding.rvAttractions.smoothScrollToPosition(
-                    attractionsAdapter?.itemCount?.minus(30) ?: 0
+                    attractionsAdapter?.attractionsList?.indexOf(it.first())
+                        ?: (lastVisibleItem + 1)
                 )
             } else {
                 attractionsAdapter?.submitList(it)
@@ -154,23 +158,13 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
         val dialogView = DialogListLangBinding.inflate(layoutInflater)
         val langAdapter: ArrayAdapter<String> =
             ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, langList)
-        val langListMap = listOf(
-            "zh-tw",
-            "zh-cn",
-            "en",
-            "ja",
-            "ko",
-            "es",
-            "id",
-            "th"
-        )
         dialogView.lvLang.adapter = langAdapter
         dialogView.lvLang.setOnItemClickListener { parent, view, position, id ->
-            sharedPreferences.edit()
-                .putString(LANG, langListMap[position])
-                .apply()
+            sharedPreferences.edit {
+                sharedPreferences[LANG] = langListMap[position]
+            }
             viewModel.clearData()
-            viewModel.getAttractionsAll(langListMap[position], viewModel.page.value ?: 1)
+            viewModel.getAttractionsAll(sharedPreferences[LANG], viewModel.page.value ?: 1)
             dialog?.dismiss()
         }
         langAdapter.notifyDataSetChanged()

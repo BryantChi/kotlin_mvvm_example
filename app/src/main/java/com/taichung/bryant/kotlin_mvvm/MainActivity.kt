@@ -2,25 +2,22 @@ package com.taichung.bryant.kotlin_mvvm
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import com.taichung.bryant.kotlin_mvvm.config.Config
+import com.taichung.bryant.kotlin_mvvm.config.Config.DATA
+import com.taichung.bryant.kotlin_mvvm.config.Config.LANG
 import com.taichung.bryant.kotlin_mvvm.databinding.ActivityMainBinding
-import com.taichung.bryant.kotlin_mvvm.databinding.DialogListLangBinding
-import com.taichung.bryant.kotlin_mvvm.repository.attractions.AttractionsRepository
-import com.taichung.bryant.kotlin_mvvm.ui.viewmodel.MainViewModel
-import com.taichung.bryant.kotlin_mvvm.utils.ViewModelFactory
+import com.taichung.bryant.kotlin_mvvm.utils.PreferenceHelper
+import com.taichung.bryant.kotlin_mvvm.utils.PreferenceHelper.get
+import com.taichung.bryant.kotlin_mvvm.utils.PreferenceHelper.set
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity @Inject constructor(
-) : AppCompatActivity() {
+class MainActivity @Inject constructor() : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -35,10 +32,13 @@ class MainActivity @Inject constructor(
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
 
-        sharedPreferences = applicationContext.getSharedPreferences(Config.DATA, 0)
-        sharedPreferences.edit()
-            .putString(Config.LANG, "zh-tw")
-            .apply()
+        sharedPreferences = PreferenceHelper.customPrefs(applicationContext, DATA)
+        val checkLang: String = sharedPreferences[LANG]
+        if (checkLang.isEmpty()) {
+            sharedPreferences.edit {
+                sharedPreferences[LANG] = "zh-tw"
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

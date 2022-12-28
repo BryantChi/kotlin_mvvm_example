@@ -76,6 +76,8 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
 
+    implementation "androidx.preference:preference-ktx:1.1.1"
+
     implementation 'io.coil-kt:coil:2.2.2'
 
     testImplementation 'junit:junit:4.13.2'

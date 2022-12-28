@@ -21,11 +21,17 @@
         android:id="@+id/AttractionsDetailsFragment"
         android:name="com.taichung.bryant.kotlin_mvvm.ui.fragment.AttractionsDetailsFragment"
         android:label="AttractionsDetailsFragment"
-        tools:layout="@layout/fragmemt_attractions_details"/>
+        tools:layout="@layout/fragmemt_attractions_details">
+        <action
+            android:id="@+id/action_mainfragment_to_attractionsdetailwebviewfragment"
+            app:destination="@id/AttractionsDetailWebviewFragment"
+            app:popUpTo="@id/AttractionsDetailsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/AttractionsDetailWebviewFragment"
-        android:name="com.taichung.bryant.kotlin_mvvm.ui.fragment.AttractionsDetailWebviewFragment"
+        android:name="com.taichung.bryant.kotlin_mvvm.ui.fragment.AttractionsDetailWebViewFragment"
         android:label="AttractionsDetailWebviewFragment"
         tools:layout="@layout/fragment_attractions_detail_webview"/>
 

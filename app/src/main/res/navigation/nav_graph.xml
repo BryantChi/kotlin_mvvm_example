@@ -3,18 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/MainFrament">
+    app:startDestination="@id/MainFragment">
 
     <fragment
-        android:id="@+id/MainFrament"
+        android:id="@+id/MainFragment"
         android:name="com.taichung.bryant.kotlin_mvvm.ui.fragment.MainFragment"
-        android:label="MainFrament"
+        android:label="MainFragment"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_mainfragment_to_attractionsdetailsfragment"
+            android:id="@+id/action_mainFragment_to_attractionsDetailsFragment"
             app:destination="@id/AttractionsDetailsFragment"
-            app:popUpTo="@id/MainFrament"
-            app:popUpToInclusive="true" />
+            app:popUpTo="@id/MainFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
@@ -23,16 +23,16 @@
         android:label="AttractionsDetailsFragment"
         tools:layout="@layout/fragmemt_attractions_details">
         <action
-            android:id="@+id/action_mainfragment_to_attractionsdetailwebviewfragment"
-            app:destination="@id/AttractionsDetailWebviewFragment"
+            android:id="@+id/action_attractionsDetailsFragment_to_attractionsDetailWebViewFragment"
+            app:destination="@id/AttractionsDetailWebViewFragment"
             app:popUpTo="@id/AttractionsDetailsFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
-        android:id="@+id/AttractionsDetailWebviewFragment"
+        android:id="@+id/AttractionsDetailWebViewFragment"
         android:name="com.taichung.bryant.kotlin_mvvm.ui.fragment.AttractionsDetailWebViewFragment"
-        android:label="AttractionsDetailWebviewFragment"
+        android:label="AttractionsDetailWebViewFragment"
         tools:layout="@layout/fragment_attractions_detail_webview"/>
 
 </navigation>

@@ -95,7 +95,7 @@ class MainFragment : BaseFragment<FragmentMainBinding, MainViewModel>() {
             object : ItemClickListener {
                 override fun itemClick(data: AttractionsData) {
                     val bundle = bundleOf(DATA to data)
-                    findNavController().navigate(R.id.AttractionsDetailsFragment, bundle)
+                    findNavController().navigate(R.id.action_mainFragment_to_attractionsDetailsFragment, bundle)
                 }
             }
         )

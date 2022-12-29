@@ -8,10 +8,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AttractDetailsViewModel @Inject constructor() : BaseViewModel() {
-    private var _url = MutableLiveData<String>()
-    val url: LiveData<String> = _url
+    private var _go2WebView = MutableLiveData(false)
+    val go2WebView: LiveData<Boolean> = _go2WebView
 
-    fun go2Webview(url: String) {
-        _url.postValue(url)
+    fun go2WebView() {
+        _go2WebView.value = true
     }
 }

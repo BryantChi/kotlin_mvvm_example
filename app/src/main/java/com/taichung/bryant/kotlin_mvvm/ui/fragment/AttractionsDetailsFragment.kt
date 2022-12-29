@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AttractionsDetailsFragment :
-    BaseFragment<FragmemtAttractionsDetailsBinding, AttractDetailsViewModel>() {
+    BaseFragment<FragmemtAttractionsDetailsBinding, AttractDetailsViewModel>(), View.OnClickListener {
     override fun getViewModelClass() = AttractDetailsViewModel::class.java
 
     override fun getViewBinding() = FragmemtAttractionsDetailsBinding.inflate(layoutInflater)
@@ -44,6 +44,7 @@ class AttractionsDetailsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.data = data
+        binding.view = this
         binding.ivBanner.load(data.images.getOrNull(0)?.src) {
             crossfade(true)
             scale(Scale.FILL)
@@ -51,9 +52,10 @@ class AttractionsDetailsFragment :
             error(R.drawable.image_defult)
             transformations(RoundedCornersTransformation())
         }
-        binding.tvUrl.setOnClickListener {
-            val bundle = bundleOf("url" to data.url)
-            findNavController().navigate(R.id.AttractionsDetailWebviewFragment, bundle)
-        }
+    }
+
+    override fun onClick(v: View?) {
+        val bundle = bundleOf("url" to data.url)
+        findNavController().navigate(R.id.action_attractionsDetailsFragment_to_attractionsDetailWebViewFragment, bundle)
     }
 }

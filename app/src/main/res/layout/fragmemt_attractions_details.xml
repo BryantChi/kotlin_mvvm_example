@@ -11,8 +11,8 @@
             type="com.taichung.bryant.kotlin_mvvm.data.attractions.AttractionsData" />
 
         <variable
-            name="viewModel"
-            type="com.taichung.bryant.kotlin_mvvm.ui.viewmodel.AttractDetailsViewModel" />
+            name="view"
+            type="com.taichung.bryant.kotlin_mvvm.ui.fragment.AttractionsDetailsFragment" />
 
     </data>
 
@@ -108,7 +108,8 @@
                         android:text="@{data.url}"
                         android:textColor="@color/blue_link"
                         android:textSize="14sp"
-                        android:clickable="true" />
+                        android:clickable="true"
+                        android:onClick="@{view::onClick}"/>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
